@@ -1,12 +1,19 @@
+//----EXPRESS CONFIG
 const express = require('express');
-const dbConfig = require('./configs/Mongo');
 const app = express();
 
+//----SOCKET IO
+const io = require('socket.io');
+
+
+
 //----CONFIG DATABASE
- dbConfig()
+const dbConfig = require('./configs/Mongo');
+dbConfig();
  
 
 
+//----ROUTES CONFIG
 
 
 
