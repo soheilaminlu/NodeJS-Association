@@ -1,10 +1,12 @@
 //----EXPRESS CONFIG
 const express = require('express');
 const app = express();
+app.use(express.urlencoded({extended:true}));
+app.use(express.json())
 
 
 //----IMPORT ROUTES
-const usersRoutes = require('./routes/users/authRoutes');
+const usersRoutes = require('./routes/users/AuthRoutes');
 
 
 //----CONFIG DATABASE

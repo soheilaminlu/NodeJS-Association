@@ -3,8 +3,15 @@ const schema = mongoose.Schema;
 
 
 const userSchema = new schema ({
-username:String,
-password:String,
+username:{
+    type:String , 
+    required:true 
+} , 
+password: {
+    type:String , 
+    required:true , 
+    minLength: 6
+} , 
 role: {
     type:String,
     enum:['member' , 'owner' , 'admin'],
