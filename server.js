@@ -2,9 +2,9 @@
 const express = require('express');
 const app = express();
 
-//----SOCKET IO
-const io = require('socket.io');
 
+//----IMPORT ROUTES
+const usersRoutes = require('./routes/users/authRoutes');
 
 
 //----CONFIG DATABASE
@@ -15,7 +15,7 @@ dbConfig();
 
 //----ROUTES CONFIG
 
-
+app.use('/api' , usersRoutes)
 
 
 

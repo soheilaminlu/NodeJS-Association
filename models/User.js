@@ -7,7 +7,7 @@ username:String,
 password:String,
 role: {
     type:String,
-    enum:['member' , 'owner'],
+    enum:['member' , 'owner' , 'admin'],
     default:'member'
 } , 
 tokens:String
