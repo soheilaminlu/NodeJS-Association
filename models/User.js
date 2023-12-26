@@ -5,11 +5,12 @@ const schema = mongoose.Schema;
 const userSchema = new schema ({
 username:{
     type:String , 
-    required:true 
+    required:true,
+    lowercase:true
 } , 
 password: {
     type:String , 
-    required:true , 
+    required:true,  
     minLength: 6
 } , 
 role: {
@@ -20,5 +21,5 @@ role: {
 tokens:String
 })
 
-module.exports = mongoose,model('User' , userSchema)
+module.exports = mongoose.model('User' , userSchema)
 
