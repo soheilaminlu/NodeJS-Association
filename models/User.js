@@ -18,6 +18,14 @@ role: {
     enum:['member' , 'owner' , 'admin'],
     default:'member'
 } ,
+
+group:[
+{
+    groupId:{
+        type:schema.Types.ObjectId,
+        ref:'User'
+    }
+}]
 })
 
 
