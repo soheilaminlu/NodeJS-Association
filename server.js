@@ -5,6 +5,10 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json())
 
 
+//---USE COOKIE-PARSER
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
+
 //----IMPORT ROUTES
 const usersRoutes = require('./routes/users/AuthRoutes');
 

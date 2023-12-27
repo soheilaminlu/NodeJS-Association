@@ -1,12 +1,16 @@
-const mongoose = require('mongoose')
-const dbConfig = () => {mongoose.connect('mongodb://localhost:27017/asodb', {useNewUrlParser: true, useUnifiedTopology: true})
-.then(
-    console.log('Mongo Connected')
-).catch((e) =>{
-    console.log(e)
-})}
+const mongoose = require('mongoose');
 
-module.exports = dbConfig
+const dbConfig = async () => {
+  try {
+    await mongoose.connect('mongodb://127.0.0.1:27017/asodb', {
+     
+    });
+      console.log('Connected to MongoDB');
 
+  
+  } catch (err) {
+    console.error('Error connecting to MongoDB:', err.message);
+  }
+};
 
-
+module.exports = dbConfig;

@@ -17,9 +17,9 @@ role: {
     type:String,
     enum:['member' , 'owner' , 'admin'],
     default:'member'
-} , 
-tokens:String
+} ,
 })
+
 
 module.exports = mongoose.model('User' , userSchema)
 
