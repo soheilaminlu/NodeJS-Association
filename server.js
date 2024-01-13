@@ -10,10 +10,11 @@ const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
 //----IMPORT ROUTES
-const authRoutes = require('./routes/users/authRoutes');
-const membersRoutes = require('./routes/users/Members');
-const ownersRoutes = require('./routes/users/Owners');
-const adminRoutes = require('./routes/users/Admin');
+const authRoutes = require('./routes/users/AuthRoutes');
+const membersRoutes = require('./routes/users/MembersRoutes')
+const ownersRoutes = require('./routes/users/OwnersRoutes');
+const adminRoutes = require('./routes/users/AdminRoutes');
+
 
 
 //----CONFIG DATABASE
@@ -25,7 +26,7 @@ dbConfig();
 //----ROUTES CONFIG
 app.use('/api' , authRoutes)
 app.use('/api/member' , membersRoutes)
-app.use('/api/owner' , ownersRoutes)
+// app.use('/api/owner' , ownersRoutes)
 app.use('/api/admin' , adminRoutes)
 
 

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../../models/User/User');
 
 const isAuth = (req, res, next) => {
     try {
@@ -7,14 +8,15 @@ const isAuth = (req, res, next) => {
         if (!token) {
             return res.status(401).json({ message: "Unauthorized User" });
         }
-
-        jwt.verify(token, 'is association secret', (err, decodedToken) => {
+    
+        jwt.verify(token, 'is association secret', async (err, decodedToken) => {
             if (err) {
                 return res.status(401).json({ message: "Unauthorized User", error: err.message });
             }
-            console.log(decodedToken)
-            res.status(200).json({ message: "User is Valid" });
-            next()
+            console.log(decodedToken);
+            const user = await User.findById(decodedToken.id);
+              res.status(200).json({ message: "User is Valid" , username:user.username });
+            next();
         });
     } catch (e) {
         console.error(e.message);

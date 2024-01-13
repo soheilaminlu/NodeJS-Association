@@ -1,5 +1,5 @@
-const User = require('../models/User');
-const createToken = require('../configs/Jwt')
+const User = require('../../models/User/User')
+const createToken = require('../../configs/Jwt')
 const bcrypt = require('bcrypt')
 
 
@@ -36,8 +36,11 @@ module.exports.loginUser = async (req, res, next) => {
 
         if(passwordMatch){
             console.log(passwordMatch)
-        res.status(200).json({ message: 'Login Successful', user: { username: user.username, role: user.role } });
         }
+        const token = createToken(user._id)
+        res.cookie('jwt', token, { httpOnly: true });
+        res.status(200).json({ message: 'Login Successful', user: { username: user.username, role: user.role } });
+
     
     } catch (e) {
         console.error(e.message);
@@ -57,6 +60,3 @@ module.exports.logoutUser = async (req, res, next) => {
   };
   
 
-module.exports.getAdminPanel = (req , res , next) =>{
-    
-}
