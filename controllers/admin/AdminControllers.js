@@ -1,11 +1,11 @@
 const User = require('../../models/User/User')
 const Group = require('../../models/group/Group')
 
-module.exports.viewAllUsers = async(req , res , next) =>{
+module.exports.viewAllUsers = async(req , res) =>{
     console.log('req res')
     const users = await User.find({})
     res.status(200).json({message:users})
-    next()
+
 }
 
 module.exports.viewUserDetails = async (req , res , next) =>{
@@ -56,8 +56,25 @@ module.exports.viewAllGroups = async (req, res, next) => {
 module.exports.updateOwner = async (req , res , next) => {
     console.log('req res')
     const {groupId} = req.params;
-    const ownerId = req.body;
-    const group = await Group.findByIdAndUpdate(groupId , {owner:ownerId} , {new:true})  
-    res.status(200).json({group:groupUpdate})
-    next()
+    const newOwnerId = req.body
+    const findGroup = await Group.findById(groupId)  
+    if(!findGroup) {
+        return res.status(404).json({message:"Group Does Not Exist"})
+    }
+  findGroup.owner = newOwnerId;
+  const updatedGroup = await findGroup.save()
+  res.status(200).json({message:"Group owner Updated" , updatedGroup:updatedGroup})
+}
+
+module.exports.deleteGroup = async (req , res ) =>{
+    try{
+        const {groupId} = req.params;
+        const deleteGroup = await Group.findByIdAndDelete(groupId)
+        return res.status(200).json({message:"Group deleted" , deletedGroup:deleteGroup})
+    } catch(error) {
+        res.status(401).json({message:"Failed to Delete" , error:error.message})
+
+    }
+
+
 }

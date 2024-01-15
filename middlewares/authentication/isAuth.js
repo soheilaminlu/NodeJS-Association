@@ -15,8 +15,8 @@ const isAuth = (req, res, next) => {
             }
             console.log(decodedToken);
             const user = await User.findById(decodedToken.id);
-              res.status(200).json({ message: "User is Valid" , username:user.username });
-            next();
+            return res.status(200).json({ message: "User is Valid" , username:user.username });
+            
         });
     } catch (e) {
         console.error(e.message);
