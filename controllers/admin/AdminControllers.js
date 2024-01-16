@@ -54,16 +54,30 @@ module.exports.viewAllGroups = async (req, res, next) => {
 };
 
 module.exports.updateOwner = async (req , res , next) => {
-    console.log('req res')
+    
     const {groupId} = req.params;
-    const newOwnerId = req.body
+    const {owner} = req.body
     const findGroup = await Group.findById(groupId)  
     if(!findGroup) {
         return res.status(404).json({message:"Group Does Not Exist"})
     }
-  findGroup.owner = newOwnerId;
+  findGroup.owner = owner;
   const updatedGroup = await findGroup.save()
   res.status(200).json({message:"Group owner Updated" , updatedGroup:updatedGroup})
+}
+
+
+module.exports.updateUserRole = async (req , res , next) => {
+const {userId} = req.params;
+const {role} = req.body;
+const user = await User.findById(userId);
+if(!user) {
+    return res.status(404).json({message:"User not Found"})
+}
+user.role = role
+const updatedUser = await user.save()
+res.status(200).json({message:"Users Role Updated Successfuly" , user:user})
+
 }
 
 module.exports.deleteGroup = async (req , res ) =>{

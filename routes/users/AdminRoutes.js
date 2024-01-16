@@ -4,7 +4,7 @@ const router = express.Router()
 const {isAdmin} = require('../../middlewares/authentication/isAdmin');
 const {isAuth} = require('../../middlewares/authentication/isAuth')
 
-const { viewAllUsers , viewUserDetails , createGroup , viewAllGroups ,updateOwner ,deleteGroup } = require('../../controllers/admin/admincontrollers');
+const { viewAllUsers , viewUserDetails , createGroup , viewAllGroups ,updateOwner, updateUserRole ,deleteGroup } = require('../../controllers/admin/admincontrollers');
 
 //----GET REQUESTS
 router.get('/users',viewAllUsers);
@@ -16,7 +16,7 @@ router.get('/groups', viewAllGroups);
 router.post('/create-group', createGroup );
 // //---PUT OR DELETE REQUESTS
 router.put('/groups/:groupId/update-owner', updateOwner);
-// router.put('/update-user-role/:userId/:newRole', isAuth, updateUserRole);
+router.put('/update-role/:userId', updateUserRole);
  router.delete('/delete-group/:groupId' , deleteGroup)
 
 

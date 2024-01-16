@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router()
 const {isAuth} = require('../../middlewares/authentication/isAuth');
-const {joinGroupRequest} = require('../../controllers/users/Members') 
+const {joinGroupRequest , sendMessage , leaveGroup , viewGroupMembers , myProfile} = require('../../controllers/users/MembersController') 
 
 //----POST REQUESTS
-router.post('/join-group/:groupId' , isAuth ,  joinGroupRequest);
-// router.post('/send-message/:groupId/:receiverId' , isAuth , sendMessage);
-// router.post('/leave-group/:groupId' , isAuth , leaveGroup );
+router.post('/join-group/:groupId' ,  joinGroupRequest);
+router.post('/send-message/:groupId/:receiverId' , sendMessage);
+router.post('/leave-group/:groupId'  , leaveGroup);
 // //----GET REQUESTS
-// router.get('/group-members/:groupId', isAuth, viewGroupMembers);
-// router.get('/my-profile', isAuth, myProfile);
+router.get('/group-members/:groupId', viewGroupMembers);
+ router.get('/my-profile', myProfile);
 // //-----PUT REQUESTS
 // router.put('/update-profile', isAuth, updateProfile);
 
