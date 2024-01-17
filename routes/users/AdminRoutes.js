@@ -7,17 +7,17 @@ const {isAuth} = require('../../middlewares/authentication/isAuth')
 const { viewAllUsers , viewUserDetails , createGroup , viewAllGroups ,updateOwner, updateUserRole ,deleteGroup } = require('../../controllers/admin/admincontrollers');
 
 //----GET REQUESTS
-router.get('/users',viewAllUsers);
+router.get('/users',isAuth,viewAllUsers);
 
-router.get('/user/:userId', viewUserDetails);
-router.get('/groups', viewAllGroups);
+router.get('/user/:userId', isAuth, viewUserDetails);
+router.get('/groups', isAuth,viewAllGroups);
 
 // //POST REQUESTS
-router.post('/create-group', createGroup );
+router.post('/create-group',isAuth, createGroup );
 // //---PUT OR DELETE REQUESTS
-router.put('/groups/:groupId/update-owner', updateOwner);
-router.put('/update-role/:userId', updateUserRole);
- router.delete('/delete-group/:groupId' , deleteGroup)
+router.put('/groups/:groupId/update-owner',isAuth , updateOwner);
+router.put('/update-role/:userId', isAuth,updateUserRole);
+ router.delete('/delete-group/:groupId', isAuth , deleteGroup)
 
 
 

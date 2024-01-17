@@ -78,5 +78,26 @@ res.status(404).json({message:"Group not Found"});
 }
 
 module.exports.myProfile = (req , res , next) =>{
+try {
+const userProfile = req.user;
+res.status(200).json(userProfile)
+}catch(error) {
+    res.status(404).json({message:"User not Found" , error:error.message})
+}
+}
+
+module.exports.updateProfile = async (req , res) => {
+    try {
+        const userId = req.params;
+        const {username , password} = req.body;
+        const updatedUser = await User.findById(userId)
+        updatedUser.username = username;
+        updatedUser.password = password;
+        await updatedUser.save()
+        res.status(200).json({message:"user profile updated successfuly"})
+    } catch(error) {
+        res.status(401).json({error:error.message})
+    } 
+    
 
 }
