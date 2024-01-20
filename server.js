@@ -26,7 +26,7 @@ dbConfig();
 //----ROUTES CONFIG
 app.use('/api' , authRoutes)
 app.use('/api/members' , membersRoutes)
-// app.use('/api/owner' , ownersRoutes)
+app.use('/api/owner' , ownersRoutes)
 app.use('/api/admin' , adminRoutes)
 
 

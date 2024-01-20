@@ -11,7 +11,7 @@ module.exports.signupUser = async (req , res , next) =>{
         const salt = await bcrypt.genSalt(saltRounds);
         const hashedPassword = await bcrypt.hash(password , salt)
         const user = await User.create({username , password:hashedPassword  , role}); 
-        const token = createToken(user._id)
+        const token = createToken(user._id , user.role)
         res.cookie('jwt' , token  , {httpOnly:true})
         await user.save();
          res.status(200).json({message:'Signup Successful' , user:user._id}) 
@@ -37,9 +37,9 @@ module.exports.loginUser = async (req, res, next) => {
         if(passwordMatch){
             console.log(passwordMatch)
         }
-        const token = createToken(user._id)
+        const token = createToken(user._id , user.role)
         res.cookie('jwt', token, { httpOnly: true });
-        res.status(200).json({ message: 'Login Successful', user: { username: user.username, role: user.role } });
+        res.status(200).json({ message: 'Login Successful', user: { username: user.username, role: user.role , id:user._id } });
 
     
     } catch (e) {

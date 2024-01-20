@@ -10,7 +10,7 @@ const isAdmin = async (req, res, next) => {
         }
 
         const decodedToken = jwt.verify(token, 'is association secret');
-        console.log(decodedToken);
+        
 
         const user = await User.findById(decodedToken.id);
 

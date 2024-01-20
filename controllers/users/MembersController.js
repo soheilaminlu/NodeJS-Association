@@ -15,13 +15,14 @@ module.exports.joinGroupRequest = async (req , res , next) =>{
             res.status(404).json({message:"Group Not Found"})
         }
         const JoinRequestState = new JoinRequest ({
-            userId:userId , 
-            groupId:groupId
+            userId:userId, 
+            groupId:group
         })
+        group.joinRequests === JoinRequestState._id
         await JoinRequestState.save()
         res.status(200).json({message:"Join Request Sent"  , JoinRequest:JoinRequestState})
     }catch(error) {
-        res.status(401).json({message:"Failed to Send Join Request"})
+        res.status(401).json({message:"Failed to Send Join Request" , error:error.message})
     }
 }
 

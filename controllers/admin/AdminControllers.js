@@ -57,7 +57,8 @@ module.exports.updateOwner = async (req , res , next) => {
     
     const {groupId} = req.params;
     const {owner} = req.body
-    const findGroup = await Group.findById(groupId)  
+    const findGroup = await Group.findById(groupId) 
+    console.log(findGroup) 
     if(!findGroup) {
         return res.status(404).json({message:"Group Does Not Exist"})
     }

@@ -21,4 +21,4 @@ const joinRequestSchema = new schema({
     
 })
 
-module.exports = mongoose.model('JoinRequest' , joinRequestSchema)
+module.exports = mongoose.model('JoinRequest' , joinRequestSchema);
