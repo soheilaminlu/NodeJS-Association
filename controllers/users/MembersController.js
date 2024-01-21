@@ -1,30 +1,42 @@
 const User = require('../../models/User/User');
-const joinModel = require('../../models/User/JoinRequest');
 const Group = require('../../models/group/Group');
 const JoinRequest = require('../../models/User/JoinRequest');
 const Message = require('../../models/message/Message');
 
 
 // REQUESTS FOR JOIN AND LEAVE GROUP
-module.exports.joinGroupRequest = async (req , res , next) =>{
-    try{
-        const {groupId} = req.params;
-        const {userId} = req.body
-        const group = await Group.findById(groupId)
-        if(!group) {
-            res.status(404).json({message:"Group Not Found"})
+
+    module.exports.joinGroupRequest = async (req, res, next) => {
+        try {
+          const { groupId } = req.params;
+          const { userId } = req.body;
+      
+          // Check if the group exists
+          const group = await Group.findById(groupId);
+      
+          if (!group) {
+            return res.status(404).json({ message: "Group Not Found" });
+          }
+      
+          // Create a join request
+          const joinRequest = new JoinRequest({
+            userId: userId,
+            groupId: groupId,
+          });
+      
+          // Save the join request
+          await joinRequest.save();
+      
+          // Update the group with the join request
+         await Group.findByIdAndUpdate(groupId , {$push : {joinRequests:joinRequest}})
+      
+          res.status(200).json({ message: "Join Request Sent", joinRequest: joinRequest });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: "Failed to Send Join Request", error: error.message });
         }
-        const JoinRequestState = new JoinRequest ({
-            userId:userId, 
-            groupId:group
-        })
-        group.joinRequests === JoinRequestState._id
-        await JoinRequestState.save()
-        res.status(200).json({message:"Join Request Sent"  , JoinRequest:JoinRequestState})
-    }catch(error) {
-        res.status(401).json({message:"Failed to Send Join Request" , error:error.message})
-    }
-}
+      };
+
 
 module.exports.leaveGroup = async(req, res , next) => {
     try{
