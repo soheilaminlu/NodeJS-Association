@@ -31,6 +31,25 @@ module.exports.listJoinRequests = async (req, res, next) => {
     }
   };
 
-  module.exports.processJoinRequest = (req , res , next) => {
+  module.exports.processJoinRequest = async(req , res , next) => {
+   const {requestId , action} = req.params;
+   const groupId = req.body
+   const group = await Group.findById(groupId);
+   
+   const joinRequest = await JoinRequest.findById(requestId)
+   if(!joinRequest) {
+   return res.status(404).json({message:"Not Found Join Request"});
+   }
+   if(action === 'accept') {
+   joinRequest.status === 'accept'
+   await joinRequest.save()
+    if(group.members.includes(joinRequest.userId)) {
+   return res.status(400).json({message:"you are the member of this Group"})
+    }  
+    const userJoined = await Group.findByIdAndUpdate(groupId , {$push:{joinRequest:joinRequest.userId}})
+  res.status(200).json({})
+   }
+
+   
 
   }
