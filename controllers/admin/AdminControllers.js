@@ -38,13 +38,17 @@ if(newGroup) {
 
 module.exports.viewAllGroups = async (req, res, next) => {
     try {
-        const groups = await Group.find({});
-
+        const groups = await Group.find({})
         if (!groups || groups.length === 0) {
             return res.status(404).json({ message: "No Group Found" });
         }
-
-        res.status(200).json({ groups: groups });
+        const groupsDetails = groups.map(group => ({
+            groupId:group._id , 
+            groupName:group.name , 
+            groupOwner:group.owner , 
+            groupMembers:group.members
+        }))
+        res.status(200).json({ groups: groupsDetails });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
