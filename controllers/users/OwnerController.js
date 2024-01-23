@@ -58,15 +58,22 @@ module.exports.listJoinRequests = async (req, res, next) => {
      res.status(401).json({error:error.message})
     }
 }
-module.exports.removeMember = (req , res , next) => {
-   try {
-    const {groupId , memberId} = req.params;
-    const group = Group.findByIdAndUpdate(groupId , {$pull:{members:memberId}})
-    if(group) {
-       return res.status(200).json({message:"Member Removed Successfuly"})
+module.exports.removeMember = async (req , res , next) => {
+  try {
+    const { groupId, memberId } = req.params;
+    const group = await Group.findByIdAndUpdate(groupId, { $pull: { members: memberId } }, { new: true });
+
+    if (!group) {
+        return res.status(404).json({ message: "Group not found" });
     }
-   return res.status(404).json({message:"Group Not Found"})
-   } catch (error) {
-    return res.status(401).json({message:"Internal Server Error" , error:error.message})
-   }
+
+    if (group.members && group.members.includes(memberId)) {
+        // Member is still in the group, removal failed
+        return res.status(404).json({ message: "Member does not exist in the group or removal failed" });
+    }
+
+    return res.status(200).json({ message: "Member removed successfully", member: memberId });
+} catch (error) {
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+}
 }
