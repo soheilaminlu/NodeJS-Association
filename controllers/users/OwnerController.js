@@ -77,3 +77,16 @@ module.exports.removeMember = async (req , res , next) => {
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
 }
 }
+module.exports.addMember =  async (req , res , next) => {
+  try {
+    const {groupId , memberId} = req.params
+const group = await Group.findById(groupId)
+if (group.members && group.members.includes(memberId)) {
+  return res.status(200).json({message:"Member does exist in the Group"})
+}
+const groupUpdated = await Group.findByIdAndUpdate(groupId, { $push: { members: memberId } }, { new: true });
+res.status(200).json({message:"Member added Successfuly" , groupUpdated:groupUpdated})
+  } catch (error) {
+    res.status(401).json({message:"Failed to Add Member" , error:error.message})
+  }
+}

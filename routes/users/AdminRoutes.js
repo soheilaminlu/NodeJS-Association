@@ -3,14 +3,15 @@ const router = express.Router()
 
 const {isAdmin} = require('../../middlewares/authentication/isAdmin');
 const {isAuth} = require('../../middlewares/authentication/isAuth')
+const {isCurrentUser} = require('../../middlewares/authentication/isCurrentUser')
 
 const { viewAllUsers , viewUserDetails , createGroup , viewAllGroups ,updateOwner, updateUserRole ,deleteGroup } = require('../../controllers/admin/admincontrollers');
 
 //----GET REQUESTS
-router.get('/users',isAuth, isAdmin, viewAllUsers);
+router.get('/users',isAuth, isAdmin, isCurrentUser, viewAllUsers);
 
-router.get('/user/:userId', isAuth,  isAdmin,viewUserDetails);
-router.get('/groups', isAuth, isAdmin  ,viewAllGroups);
+router.get('/user/:userId', isAuth,  isAdmin, isCurrentUser,viewUserDetails);
+router.get('/groups', isAuth, isAdmin  , isCurrentUser,viewAllGroups);
 
 // //POST REQUESTS
 router.post('/create-group',isAuth, isAdmin,createGroup );

@@ -2,8 +2,15 @@
 const express = require('express');
 const app = express();
 app.use(express.urlencoded({extended:true}));
-app.use(express.json())
+app.use(express.json());
 
+//CORS CONFIGS
+const cors = require('cors')
+const corsOptions = {
+    creadential:true , 
+    origin:'http//:localhost:3000'
+}
+app.use(cors(corsOptions))
 
 //---USE COOKIE-PARSER
 const cookieParser = require('cookie-parser')

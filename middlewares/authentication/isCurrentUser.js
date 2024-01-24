@@ -1,5 +1,5 @@
-const User = require("../../models/User");
-
+const User = require('../../models/User/User')
+const jwt = require('jsonwebtoken')
 const isCurrentUser = async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
@@ -8,7 +8,7 @@ const isCurrentUser = async (req, res, next) => {
             return res.status(401).json({ message: "Unauthorized User" });
         }
 
-        const decodedToken = jwt.verify(token, 'is association secret');
+        const decodedToken = await jwt.verify(token, 'is association secret');
         const user = await User.findById(decodedToken.id);
 
         if (!user) {

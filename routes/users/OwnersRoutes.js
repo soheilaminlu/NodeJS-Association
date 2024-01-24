@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router()
 const {isAuth} = require('../../middlewares/authentication/isAuth');
 const {isGroupOwner} = require("../../middlewares/authentication/isGroupOwner")
-const {listJoinRequests , processJoinRequest , removeMember , updateMember} = require('../../controllers/users/OwnerController')
+const {isCurrentUser} = require('../../middlewares/authentication/isCurrentUser')
+const {listJoinRequests , processJoinRequest , removeMember , addMember} = require('../../controllers/users/OwnerController')
 
 // //-----GET REQUESTS
-router.get('/join-requests/:groupId', isAuth ,listJoinRequests);
+router.get('/join-requests/:groupId', isAuth ,isGroupOwner, isCurrentUser   ,listJoinRequests);
 // //-----POST REQUESTS
-router.post('/process-join-request/:requestId/:action', isAuth ,processJoinRequest);
-router.post('/remove-member/:groupId/:memberId', isAuth , removeMember);
-// //-----PUT REQUESTS
+router.post('/process-join-request/:requestId/:action', isAuth ,  isGroupOwner , processJoinRequest);
+router.post('/remove-member/:groupId/:memberId', isAuth , isGroupOwner ,removeMember);
+router.post('/add-member/:groupId/:memberId' , isAuth , isGroupOwner ,  addMember)
 
 module.exports = router
