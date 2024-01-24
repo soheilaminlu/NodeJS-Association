@@ -81,7 +81,7 @@ if(!user) {
 }
 user.role = role
 const updatedUser = await user.save()
-res.status(200).json({message:"Users Role Updated Successfuly" , user:user})
+res.status(200).json({message:"Users Role Updated Successfuly" , user:updatedUser})
 
 }
 

@@ -19,13 +19,19 @@ role: {
     default:'member'
 } ,
 
-group:[
+group:
 {
     groupId:{
         type:schema.Types.ObjectId,
-        ref:'User'
+        ref:'Group'
     }
-}]
+} , 
+messages: {
+userId:{
+    type:schema.Types.ObjectId ,
+    ref:'User'
+}
+}
 })
 
 
