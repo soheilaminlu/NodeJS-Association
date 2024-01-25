@@ -2,7 +2,7 @@ const Group = require("../../models/group/Group")
 
 const isGroupOwner = async (req, res, next) => {
     try {
-        const {groupId} = req.params 
+        const {groupId} = req.params || req.body
         const group = await Group.findById(groupId)
         if(!group) {
             return res.status(404).json({message:"Not Found Group"})

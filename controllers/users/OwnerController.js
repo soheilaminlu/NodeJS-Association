@@ -1,4 +1,5 @@
-const JoinRequest = require("../../models/User/JoinRequest")
+const JoinRequest = require("../../models/User/JoinRequest");
+const User = require("../../models/User/User");
 const Group = require("../../models/group/Group")
 
 module.exports.listJoinRequests = async (req, res, next) => {
@@ -32,30 +33,33 @@ module.exports.listJoinRequests = async (req, res, next) => {
   };
 
   module.exports.processJoinRequest = async(req , res , next) => {
-    try{
-        const {requestId , action} = req.params;
-        const {groupId} = req.body
-        const group = await Group.findById(groupId);
-        
-        const joinRequest = await JoinRequest.findById(requestId)
+    try {
+      const {action , requestId} = req.params;
+      if(action === 'accept') {
+        const joinRequest = await JoinRequest.findById(requestId).populate('userId' , 'groupId')
         if(!joinRequest) {
-        return res.status(404).json({message:"Not Found Join Request"});
+          return res.status(404).json({message:"Not Found Join Request"})
         }
-        if(action === 'accept') {
-        joinRequest.status === 'accept'
-        await joinRequest.save()
-         if(group.members && group.members.includes(joinRequest.userId)) {
-        return res.status(400).json({message:"you are the member of this Group"})
-         }  
-         const userJoined = await Group.findByIdAndUpdate(groupId , {$push:{members:joinRequest.userId} })
-      return res.status(200).json({message:"User Joined to Group" , group:userJoined})
+        const user = await User.findById(joinRequest.userId);
+        const group = await Group.findById(joinRequest.groupId);
+        if(!user || !group) {
+        return res.status(404).json({message:"User or Group not Found"})
+         }
+         const userUpdated = await User.findByIdAndUpdate(joinRequest.userId ,{$push:{group:joinRequest.groupId}} , {new:true});
+         const groupUpdated = await Group.findByIdAndUpdate(joinRequest.groupId , {$push:{members:joinRequest.userId}})
+         const userAlreadyExist = group.members && group.members.includes(user._id)
+         if(userAlreadyExist) {
+          return res.status(401).json({message:"User Already Exist"})
+         }
+        return res.status(200).json({message:"User Joined Successfuly" , user:userUpdated.group , group:groupUpdated.members})
+       
         }
-        if(action ==='reject') {
-            joinRequest.status === 'reject'
-            return res.status(200).json({message:'rejected request by owner'})
+        if(action === 'reject') {
+          res.status(401).json({message:"joinRequests Rejected"})
         }
-    }catch(error) {
-     res.status(401).json({error:error.message})
+         
+    } catch (error) {
+      res.status(401).json({message:"Internal Server" , error:error.message})
     }
 }
 module.exports.removeMember = async (req , res , next) => {

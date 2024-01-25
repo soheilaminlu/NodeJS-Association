@@ -3,8 +3,17 @@ const Group = require('../../models/group/Group')
 
 module.exports.viewAllUsers = async(req , res) =>{
     console.log('req res')
-    const users = await User.find({})
-    res.status(200).json({message:users})
+    const users = await User.find({}).populate({
+        path:'group' , 
+        select:'name'
+    })
+    usersData = users.map(user =>({
+     username:user.username ,
+     role:user.role , 
+     id:user._id , 
+     group:user.group
+    }))
+    res.status(200).json({message:usersData})
 
 }
 

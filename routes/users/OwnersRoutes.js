@@ -8,8 +8,8 @@ const {listJoinRequests , processJoinRequest , removeMember , addMember} = requi
 // //-----GET REQUESTS
 router.get('/join-requests/:groupId', isAuth ,isGroupOwner, isCurrentUser   ,listJoinRequests);
 // //-----POST REQUESTS
-router.post('/process-join-request/:requestId/:action', isAuth ,  isGroupOwner , processJoinRequest);
-router.post('/remove-member/:groupId/:memberId', isAuth , isGroupOwner ,removeMember);
-router.post('/add-member/:groupId/:memberId' , isAuth , isGroupOwner ,  addMember)
+router.post('/process-join-request/:requestId/:action', isAuth , processJoinRequest);
+router.post('/remove-member/:groupId/:memberId', isAuth ,removeMember);
+router.post('/add-member/:groupId/:memberId' , isAuth ,  addMember);
 
 module.exports = router
