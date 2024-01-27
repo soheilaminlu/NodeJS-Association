@@ -31,6 +31,14 @@ module.exports.listJoinRequests = async (req, res, next) => {
       res.status(500).json({ message: "Failed to load Join Requests", error: error.message });
     }
   };
+  module.exports.viewGroup = async (req , res, next) => {
+    const {groupId} = req.params
+    const group = await Group.findById(groupId);
+    if(!group) {
+      res.status(404).json({message:"Not Found Group"});
+    }
+    res.status(200).json({message:"you are an Owner of this Group" , group:group})
+  }
 
   module.exports.processJoinRequest = async(req , res , next) => {
     try {

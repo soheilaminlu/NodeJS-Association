@@ -101,7 +101,7 @@ res.status(200).json(userProfile)
 
 module.exports.updateProfile = async (req , res) => {
     try {
-        const userId = req.params;
+        const {userId} = req.params;
         const {username , password} = req.body;
         const updatedUser = await User.findById(userId)
         updatedUser.username = username;

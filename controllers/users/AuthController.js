@@ -11,6 +11,12 @@ module.exports.signupUser = async (req , res , next) =>{
         const salt = await bcrypt.genSalt(saltRounds);
         const hashedPassword = await bcrypt.hash(password , salt)
         const user = await User.create({username , password:hashedPassword  , role}); 
+        if(User.exists ({
+            username:username , 
+            password:password
+        })) {
+            return res.status(403).json({message:"User already Exist"});
+        }
         const token = createToken(user._id , user.role)
         res.cookie('jwt' , token  , {httpOnly:true})
         await user.save();

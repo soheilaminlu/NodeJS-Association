@@ -12,7 +12,7 @@ router.post('/leave-group/:groupId' ,isAuth , leaveGroup);
 router.get('/group-members/:groupId', isAuth , isCurrentUser,viewGroupMembers);
  router.get('/my-profile', isAuth, isCurrentUser,myProfile);
 // //-----PUT REQUESTS
-router.put('/update-profile', isAuth, updateProfile);
+router.put('/update-profile/:userId', isAuth, updateProfile);
 
 
 

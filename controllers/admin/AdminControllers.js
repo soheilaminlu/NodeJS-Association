@@ -38,11 +38,20 @@ const newGroup = await Group.create ({
 })
 await newGroup.save()
 if(newGroup) {
-    res.status(200).json({group:newGroup})
+    res.status(200).json({messagr:"Group created Successfuly" , group:newGroup})
 } else {
     res.status(401).json({message: "Group Undefined"})
 }
 
+}
+
+module.exports.viewGroupDetails = async (req , res , next) => {
+const {groupId} = req.params;
+const group = await Group.findById(groupId)
+if(!group) {
+  return  res.status(404).json({message:"Group not Found"})
+}
+return res.status(200).json({message:"Group Detail Loaded Successfuly" , group:group})
 }
 
 module.exports.viewAllGroups = async (req, res, next) => {
