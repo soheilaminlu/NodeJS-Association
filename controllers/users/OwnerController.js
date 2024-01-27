@@ -45,13 +45,17 @@ module.exports.listJoinRequests = async (req, res, next) => {
         if(!user || !group) {
         return res.status(404).json({message:"User or Group not Found"})
          }
-         const userUpdated = await User.findByIdAndUpdate(joinRequest.userId ,{$push:{group:joinRequest.groupId}} , {new:true});
-         const groupUpdated = await Group.findByIdAndUpdate(joinRequest.groupId , {$push:{members:joinRequest.userId}})
-         const userAlreadyExist = group.members && group.members.includes(user._id)
+          const userAlreadyExist = await Group.exists({
+          _id:joinRequest.groupId , 
+          members:joinRequest.userId
+         })
          if(userAlreadyExist) {
-          return res.status(401).json({message:"User Already Exist"})
+         return res.status(401).json({mesasage:"User Already Exist"})
          }
-        return res.status(200).json({message:"User Joined Successfuly" , user:userUpdated.group , group:groupUpdated.members})
+         const userUpdated = await User.findByIdAndUpdate(joinRequest.userId ,{$push:{group:joinRequest.groupId}} , {new:true});
+         const groupUpdated = await Group.findByIdAndUpdate(joinRequest.groupId , {$push:{members:joinRequest.userId}} , {new:true})
+         console.log(joinRequest.groupId)
+        return res.status(200).json({message:"User Joined Successfuly" , user:userUpdated , group:groupUpdated.members})
        
         }
         if(action === 'reject') {
@@ -85,9 +89,12 @@ module.exports.addMember =  async (req , res , next) => {
   try {
     const {groupId , memberId} = req.params
 const group = await Group.findById(groupId)
-if (group.members && group.members.includes(memberId)) {
-  return res.status(200).json({message:"Member does exist in the Group"})
-}
+ const userAlreadyExist = await Group.exists({
+          members:joinRequest.userId
+         })
+         if(userAlreadyExist) {
+         return res.status(401).json({mesasage:"User Already Exist"})
+         }
 const groupUpdated = await Group.findByIdAndUpdate(groupId, { $push: { members: memberId } }, { new: true });
 res.status(200).json({message:"Member added Successfuly" , groupUpdated:groupUpdated})
   } catch (error) {
