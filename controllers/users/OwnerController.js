@@ -83,29 +83,37 @@ module.exports.removeMember = async (req , res , next) => {
         return res.status(404).json({ message: "Group not found" });
     }
 
-    if (group.members && group.members.includes(memberId)) {
-        // Member is still in the group, removal failed
-        return res.status(404).json({ message: "Member does not exist in the group or removal failed" });
+    const memberExist = await Group.exists({
+      _id:groupId , 
+      members:memberId
+    })
+    if(memberExist) {
+      return res.status(200).json({message:"Member Already Exist"})
     }
-
-    return res.status(200).json({ message: "Member removed successfully", member: memberId });
+    
+    return res.status(200).json({ message: "Member removed Successfully", member: memberId });
 } catch (error) {
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
 }
 }
 module.exports.addMember =  async (req , res , next) => {
   try {
-    const {groupId , memberId} = req.params
-const group = await Group.findById(groupId)
- const userAlreadyExist = await Group.exists({
-          members:joinRequest.userId
-         })
-         if(userAlreadyExist) {
-         return res.status(401).json({mesasage:"User Already Exist"})
-         }
-const groupUpdated = await Group.findByIdAndUpdate(groupId, { $push: { members: memberId } }, { new: true });
-res.status(200).json({message:"Member added Successfuly" , groupUpdated:groupUpdated})
-  } catch (error) {
-    res.status(401).json({message:"Failed to Add Member" , error:error.message})
-  }
+    const {groupId} = req.params;
+    const {memberId} = req.body
+    const memberExist = await Group.exists({
+      _id:groupId , 
+      members:memberId
+    })
+    if(memberExist) {
+      return res.status(200).json({message:"Member Already Exist"})
+    }
+    const groupUpdated = await Group.findByIdAndUpdate(groupId , {$push:{members:memberId}} , {new:true})
+    if(!groupUpdated) {
+      return res.status(401).json({message:"Failed to Add member"})
+    }
+   return res.status(200).json({message:"Group updated Successfuly" , groupUpdated:groupUpdated})
+}catch(error) {
+  res.status(401).json({message:"Internal Server" , error:error})
+}
+
 }

@@ -61,21 +61,21 @@ res.status(200).json({message:"User Left the Group"})
 
 module.exports.sendMessage = async (req , res , next) =>{
 try {
-    const { sender , reciever , content} = req.body
-
-const senderGroup = await Group.findOne({members:sender});
-const recieverGroup = await Group.findOne({members:reciever});
-
-if(!senderGroup || !recieverGroup || senderGroup._id !== recieverGroup._id) {
- return res.status(401).json({message:"Members are not at the same group"})
+  const {groupId , recieverId} = req.params;
+  const sender = req.user._id
+  const {content} = req.body
+  console.log(sender)
+  const group = await Group.findById(groupId);
+if(!group) {
+  return res.status(404).json({message:"Group not found"})
 }
-const newMessage = new Message({
-    sender:sender,
-    reciever:reciever , 
-    content:content
+const newMessage = await new Message({
+  sender:sender , 
+  reciver:recieverId , 
+  content:content
 })
 await newMessage.save()
-res.status(200).json({message:"Message sent Successfuly" , newMessage:newMessage})
+
 }catch(error) {
     res.status(401).json({message:"Failed to Send Message"})
 }

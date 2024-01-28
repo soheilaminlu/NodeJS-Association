@@ -12,6 +12,6 @@ router.get('/view-group/:groupId' , isAuth , isCurrentUser , isGroupOwner , view
 
 router.post('/process-join-request/:requestId/:action', isAuth ,  isGroupOwner ,processJoinRequest);
 router.post('/remove-member/:groupId/:memberId', isAuth ,isGroupOwner,removeMember);
-router.post('/add-member/:groupId/:memberId' , isAuth ,  isGroupOwner,addMember);
+router.post('/add-member/:groupId' , isAuth ,  isGroupOwner,addMember);
 
 module.exports = router
