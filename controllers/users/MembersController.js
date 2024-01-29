@@ -62,22 +62,37 @@ res.status(200).json({message:"User Left the Group"})
 module.exports.sendMessage = async (req , res , next) =>{
 try {
   const {groupId , recieverId} = req.params;
-  const sender = req.user._id
+  const sender = req.user._id.toString()
   const {content} = req.body
   console.log(sender)
+  console.log(recieverId)
   const group = await Group.findById(groupId);
 if(!group) {
   return res.status(404).json({message:"Group not found"})
 }
+const sameGroup = await Group.exists({
+  _id:groupId , 
+  members:{$all:[sender , recieverId]}
+});
+if(!sameGroup) {
+  console.log(sameGroup)
+  return res.status(400).json({message:"sender and reciever are not at the same Group"})
+}
+console.log(sameGroup)
 const newMessage = await new Message({
   sender:sender , 
   reciver:recieverId , 
   content:content
 })
 await newMessage.save()
-
+const reciever =  await User.findByIdAndUpdate(recieverId , {$push:{
+  messagesSender:{
+   sender: newMessage.sender , 
+   content:newMessage.content
+}}})
+ res.status(200).json({message:"Message Recieved" , reciever:reciever})
 }catch(error) {
-    res.status(401).json({message:"Failed to Send Message"})
+    res.status(401).json({message:"Failed to Send Message" , error:error.message})
 }
 }
 

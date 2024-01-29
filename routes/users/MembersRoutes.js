@@ -6,7 +6,7 @@ const {joinGroupRequest , sendMessage , leaveGroup , viewGroupMembers , myProfil
 
 //----POST REQUESTS
 router.post('/join-group/:groupId' ,isAuth  ,joinGroupRequest);
-router.post('/send-message/:groupId/:receiverId' , isAuth, sendMessage);
+router.post('/send-message/:groupId/:recieverId' , isAuth, sendMessage);
 router.post('/leave-group/:groupId' ,isAuth , leaveGroup);
 // //----GET REQUESTS
 router.get('/group-members/:groupId', isAuth , isCurrentUser,viewGroupMembers);
