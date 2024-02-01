@@ -1,5 +1,6 @@
 const User = require('../../models/User/User')
 const Group = require('../../models/group/Group')
+const Message = require('../../models/message/Message')
 
 module.exports.viewAllUsers = async(req , res) =>{
     console.log('req res')
@@ -114,4 +115,17 @@ module.exports.deleteGroup = async (req , res ) =>{
     }
 
 
+} 
+
+module.exports.allMessages = async (req, res , next) => {
+    const messages = await Message.find({})
+    if(!messages) {
+        return res.status(404).json({message:"Not found any Message"})
+    }
+    const messageDetails = await  messages.map (message => ({
+        sender:message.sender , 
+        receiver:message.receiver , 
+        content:message.content
+    }))
+    res.status(200).json({message:"messages are Loaded Successfuly" , messages:messageDetails})
 }

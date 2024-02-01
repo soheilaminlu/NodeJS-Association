@@ -9,7 +9,7 @@ const Message = require('../../models/message/Message');
     module.exports.joinGroupRequest = async (req, res, next) => {
         try {
           const { groupId } = req.params;
-          const { userId } = req.body;
+          const  userId  = req.user._id;
       
           // Check if the group exists
           const group = await Group.findById(groupId);
@@ -60,39 +60,54 @@ res.status(200).json({message:"User Left the Group"})
 }
 
 module.exports.sendMessage = async (req , res , next) =>{
-try {
-  const {groupId , recieverId} = req.params;
-  const sender = req.user._id.toString()
-  const {content} = req.body
-  console.log(sender)
-  console.log(recieverId)
-  const group = await Group.findById(groupId);
-if(!group) {
-  return res.status(404).json({message:"Group not found"})
-}
-const sameGroup = await Group.exists({
-  _id:groupId , 
-  members:{$all:[sender , recieverId]}
-});
-if(!sameGroup) {
-  console.log(sameGroup)
-  return res.status(400).json({message:"sender and reciever are not at the same Group"})
-}
-console.log(sameGroup)
-const newMessage = await new Message({
-  sender:sender , 
-  reciver:recieverId , 
-  content:content
-})
-await newMessage.save()
-const reciever =  await User.findByIdAndUpdate(recieverId , {$push:{
-  messagesSender:{
-   sender: newMessage.sender , 
-   content:newMessage.content
-}}})
- res.status(200).json({message:"Message Recieved" , reciever:reciever})
+  try {
+    const { receiverId } = req.params;
+    const { content } = req.body;
+
+    // Check if the receiver exists
+    const receiver = await User.findById(receiverId);
+    if (!receiver) {
+      return res.status(404).json({ error: 'Receiver not found' });
+    }
+
+    // Check if both sender and receiver are members of the same group
+    const commonGroup = await Group.findOne({
+      members: { $all: [req.user._id, receiverId] },
+    });
+
+    if (!commonGroup) {
+      return res.status(403).json({ error: 'Sender and receiver are not in the same group' });
+    }
+
+    // Create a new message
+    const newMessage = new Message({
+      sender: req.user._id,
+      receiver: receiverId,
+      content,
+    });
+
+    // Save the message
+    await newMessage.save();
+
+    // Update sender's messages field
+    const senderUser = await User.findByIdAndUpdate(req.user._id , {$push:{messages:newMessage._id}} ,{new:true});
+    await senderUser.save();
+
+    // Update receiver's messages field
+   const receiverUser = await User.findByIdAndUpdate(receiverId , {$push:{messages:newMessage._id}},{new:true});
+    await receiverUser.save();
+
+   const io = req.io;
+   io.emit('message', { content: newMessage.content, sender: req.user._id, receiver: receiverId });
+
+   const messages = await Message.find({ $or: [{ sender: req.user._id, receiver: receiverId }, { sender: receiverId, receiver: req.user._id }] })
+   .sort({ createdAt: 'asc' })
+   .populate('sender', 'username')
+   .populate('receiver', 'username');
+
+   return res.status(200).json({ message: 'Message sent successfully', messages });
 }catch(error) {
-    res.status(401).json({message:"Failed to Send Message" , error:error.message})
+res.status(500).json({message:"internal Server Error"})
 }
 }
 

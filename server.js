@@ -4,6 +4,27 @@ const app = express();
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+//SOCKET-IO CONFIG
+const http = require('http');
+const socketIO = require('socket.io');
+const server = http.createServer(app);
+const io = socketIO(server);
+
+app.use((req , res  , next)=>{
+    req.io = io;
+    next()
+})
+
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+  
+    // Handle disconnect event
+    socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+      // Add logic to handle user disconnection if needed
+    });
+  });
+
 //CORS CONFIGS
 const cors = require('cors')
 const corsOptions = {
@@ -40,6 +61,6 @@ app.use('/api/admin' , adminRoutes)
  
 
 
-app.listen(3000 , (req , res) =>{
+server.listen(3000 , (req , res) =>{
 console.log('Server Connected')
 })

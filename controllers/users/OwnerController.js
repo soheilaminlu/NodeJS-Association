@@ -108,7 +108,8 @@ module.exports.addMember =  async (req , res , next) => {
       return res.status(200).json({message:"Member Already Exist"})
     }
     const groupUpdated = await Group.findByIdAndUpdate(groupId , {$push:{members:memberId}} , {new:true})
-    if(!groupUpdated) {
+    const userUpdated = await User.findByIdAndUpdate(memberId ,{$push:{group:groupId}} )
+    if(!groupUpdated || !userUpdated) {
       return res.status(401).json({message:"Failed to Add member"})
     }
    return res.status(200).json({message:"Group updated Successfuly" , groupUpdated:groupUpdated})

@@ -10,7 +10,7 @@ router.get('/join-requests/:groupId', isAuth ,isGroupOwner, isCurrentUser   ,lis
 router.get('/view-group/:groupId' , isAuth , isCurrentUser , isGroupOwner , viewGroup)
 // //-----POST REQUESTS
 
-router.post('/process-join-request/:requestId/:action', isAuth ,  isGroupOwner ,processJoinRequest);
+router.post('/process-join-request/:requestId/:action', isAuth ,processJoinRequest);
 router.post('/remove-member/:groupId/:memberId', isAuth ,isGroupOwner,removeMember);
 router.post('/add-member/:groupId' , isAuth ,  isGroupOwner,addMember);
 

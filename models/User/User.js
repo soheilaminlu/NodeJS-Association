@@ -21,7 +21,7 @@ role: {
 
 group:[{type:schema.Types.ObjectId, ref:'Group'}] , 
 
-messages:[{type:schema.Types.ObjectId , ref:'User'}]
+messages:[{type:schema.Types.ObjectId , ref:'Message'}]
 
 })
 
