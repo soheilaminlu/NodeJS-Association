@@ -5,13 +5,13 @@ const schema = mongoose.Schema;
 const userSchema = new schema ({
 username:{
     type:String , 
-    required:true,
+    required:[true , 'username is required'],
     lowercase:true
 } , 
 password: {
     type:String , 
-    required:true,  
-    minLength: 6
+    required:[true , 'username is required'],  
+    minLength: [6 , 'Password must be at least 6 characters long']
 } , 
 role: {
     type:String,

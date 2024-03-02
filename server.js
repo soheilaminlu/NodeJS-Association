@@ -4,6 +4,8 @@ const app = express();
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+//IMPORT ERROR HANDLLING MIDDLEWARE
+const {notFoundError} = require('./middlewares/errorhandlling/Notfound')
 //SOCKET-IO CONFIG
 const http = require('http');
 const socketIO = require('socket.io');
@@ -58,9 +60,9 @@ app.use('/api/owner' , ownersRoutes)
 app.use('/api/admin' , adminRoutes)
 
 
- 
+//  app.use('*' , notFoundError)
 
 
-server.listen(3000 , (req , res) =>{
+server.listen(5000 , (req , res) =>{
 console.log('Server Connected')
 })

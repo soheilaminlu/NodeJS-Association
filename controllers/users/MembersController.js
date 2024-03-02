@@ -90,12 +90,10 @@ module.exports.sendMessage = async (req , res , next) =>{
     await newMessage.save();
 
     // Update sender's messages field
-    const senderUser = await User.findByIdAndUpdate(req.user._id , {$push:{messages:newMessage._id}} ,{new:true});
-    await senderUser.save();
-
-    // Update receiver's messages field
-   const receiverUser = await User.findByIdAndUpdate(receiverId , {$push:{messages:newMessage._id}},{new:true});
-    await receiverUser.save();
+    await Promise.all([
+      User.findByIdAndUpdate(req.user._id, { $push: { messages: newMessage._id } }),
+      User.findByIdAndUpdate(receiverId, { $push: { messages: newMessage._id } })
+  ]);
 
    const io = req.io;
    io.emit('message', { content: newMessage.content, sender: req.user._id, receiver: receiverId });
